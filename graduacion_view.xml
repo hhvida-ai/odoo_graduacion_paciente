@@ -1,0 +1,102 @@
+<odoo>
+  <!-- FORM de optica.graduacion -->
+  <record id="view_graduacion_form" model="ir.ui.view">
+    <field name="name">optica.graduacion.form</field>
+    <field name="model">optica.graduacion</field>
+    <field name="arch" type="xml">
+      <form string="Graduación de Paciente">
+        <header>
+          <!-- Botón que llama al método Python -->
+          <button name="action_imprimir_historia_clinica"
+                  string="Imprimir Historia Clínica"
+                  type="object"
+                  class="oe_highlight"
+                  icon="fa-print"/>
+        </header>
+
+        <sheet>
+          <!-- Cabecera básica -->
+          <group>
+            <group>
+              <field name="paciente_id"/>
+              <field name="fecha"/>
+              <field name="profesional"/>
+            </group>
+          </group>
+
+          <!-- Rx en dos columnas -->
+          <group col="2">
+            <group string="Ojo Derecho">
+              <field name="ojo_derecho_esfera"   string="ESF" placeholder="0.00"/>
+              <field name="ojo_derecho_cilindro" string="CIL" placeholder="0.00"/>
+              <field name="ojo_derecho_eje"      string="EJE" placeholder="0"/>
+              <field name="ojo_derecho_av"       string="AV"  placeholder="20/20"/>
+            </group>
+
+            <group string="Ojo Izquierdo">
+              <field name="ojo_izquierdo_esfera"   string="ESF" placeholder="0.00"/>
+              <field name="ojo_izquierdo_cilindro" string="CIL" placeholder="0.00"/>
+              <field name="ojo_izquierdo_eje"      string="EJE" placeholder="0"/>
+              <field name="ojo_izquierdo_av"       string="AV"  placeholder="20/20"/>
+            </group>
+          </group>
+
+          <!-- Datos adicionales en 2 columnas -->
+          <group string="Datos adicionales" col="2">
+            <!-- Columna izquierda -->
+            <group>
+              <field name="adicion"                  string="ADD"    placeholder="0.00"/>
+              <field name="distancia_nasopupilar_od" string="DNP OD" placeholder="0.0"/>
+            </group>
+            <!-- Columna derecha -->
+            <group>
+              <field name="distancia_interpupilar"   string="DIP"    placeholder="0.0"/>
+              <field name="distancia_nasopupilar_oi" string="DNP OI" placeholder="0.0"/>
+            </group>
+          </group>
+
+          <!-- Otros -->
+          <group>
+            <field name="tipo_lente"/>
+            <field name="diagnostico"/>
+            <field name="observaciones" colspan="2"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Acción y menú principal -->
+  <record id="action_graduacion" model="ir.actions.act_window">
+    <field name="name">Graduaciones</field>
+    <field name="res_model">optica.graduacion</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="menu_optica_root" name="Óptica" sequence="10"/>
+  <menuitem id="menu_graduaciones" name="Graduaciones"
+            parent="menu_optica_root" action="action_graduacion" sequence="20"/>
+
+  <!-- Pestaña en Contactos: abre SIEMPRE este form -->
+  <record id="view_res_partner_form_inherit_graduaciones" model="ir.ui.view">
+    <field name="name">res.partner.form.inherit.graduaciones</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//notebook" position="inside">
+        <page string="Graduaciones">
+          <field name="graduacion_ids"
+                 context="{'default_paciente_id': active_id,
+                           'form_view_ref': 'odoo_graduacion_paciente.view_graduacion_form'}">
+            <tree string="Graduaciones" decoration-muted="not fecha">
+              <field name="fecha"/>
+              <field name="ojo_derecho_esfera"/>
+              <field name="ojo_izquierdo_esfera"/>
+              <field name="diagnostico" optional="hide"/>
+            </tree>
+          </field>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

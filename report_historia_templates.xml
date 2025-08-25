@@ -1,0 +1,123 @@
+<odoo>
+  <template id="report_historia_document">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="web.external_layout">
+          <div class="page">
+            <style>
+              .rx-block { margin: 6px 0 10px 0; }
+              .rx-h2 { margin: 0 0 8px 0; }
+              .rx-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+              .rx-table th, .rx-table td { border: 1px solid #ddd; padding: 6px; vertical-align: top; }
+              .rx-table th { text-align: left; }
+              .muted { color: #666; }
+            </style>
+
+            <!-- Encabezado -->
+            <h2 class="rx-h2">Historia clínica</h2>
+            <div class="rx-block">
+              <table class="rx-table">
+                <tbody>
+                  <tr>
+                    <th style="width:25%;">Paciente</th>
+                    <td><span t-field="doc.paciente_id.display_name"/></td>
+                  </tr>
+                  <tr t-if="doc.fecha">
+                    <th>Fecha</th>
+                    <td><span t-field="doc.fecha"/></td>
+                  </tr>
+                  <tr t-if="doc.diagnostico">
+                    <th>Diagnóstico</th>
+                    <td><span t-field="doc.diagnostico"/></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- RX: OD / OI -->
+            <t t-if="doc.ojo_derecho_esfera is not None or doc.ojo_derecho_cilindro is not None or doc.ojo_derecho_eje is not None or doc.ojo_derecho_av or
+                      doc.ojo_izquierdo_esfera is not None or doc.ojo_izquierdo_cilindro is not None or doc.ojo_izquierdo_eje is not None or doc.ojo_izquierdo_av">
+              <div class="rx-block">
+                <table class="rx-table">
+                  <thead>
+                    <tr>
+                      <th style="width:25%;">Parámetro</th>
+                      <th style="width:37.5%;">Ojo derecho</th>
+                      <th style="width:37.5%;">Ojo izquierdo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr t-if="doc.ojo_derecho_esfera is not None or doc.ojo_izquierdo_esfera is not None">
+                      <td>Esfera</td>
+                      <td><span t-field="doc.ojo_derecho_esfera"/></td>
+                      <td><span t-field="doc.ojo_izquierdo_esfera"/></td>
+                    </tr>
+                    <tr t-if="doc.ojo_derecho_cilindro is not None or doc.ojo_izquierdo_cilindro is not None">
+                      <td>Cilindro</td>
+                      <td><span t-field="doc.ojo_derecho_cilindro"/></td>
+                      <td><span t-field="doc.ojo_izquierdo_cilindro"/></td>
+                    </tr>
+                    <tr t-if="doc.ojo_derecho_eje is not None or doc.ojo_izquierdo_eje is not None">
+                      <td>Eje</td>
+                      <td><span t-field="doc.ojo_derecho_eje"/></td>
+                      <td><span t-field="doc.ojo_izquierdo_eje"/></td>
+                    </tr>
+                    <tr t-if="doc.ojo_derecho_av or doc.ojo_izquierdo_av">
+                      <td>AV</td>
+                      <td><t t-esc="doc.ojo_derecho_av or ''"/></td>
+                      <td><t t-esc="doc.ojo_izquierdo_av or ''"/></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </t>
+
+            <!-- Adiciones y medidas -->
+            <t t-if="doc.adicion or doc.tipo_lente or doc.distancia_nasopupilar_od or doc.distancia_nasopupilar_oi or doc.distancia_interpupilar">
+              <div class="rx-block">
+                <table class="rx-table">
+                  <thead>
+                    <tr>
+                      <th style="width:40%;">Medida</th>
+                      <th>Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr t-if="doc.adicion">
+                      <td>Adición</td>
+                      <td><span t-field="doc.adicion"/></td>
+                    </tr>
+                    <tr t-if="doc.tipo_lente">
+                      <td>Tipo de lente</td>
+                      <td><span t-field="doc.tipo_lente"/></td>
+                    </tr>
+                    <tr t-if="doc.distancia_nasopupilar_od">
+                      <td>DNP OD</td>
+                      <td><span t-field="doc.distancia_nasopupilar_od"/></td>
+                    </tr>
+                    <tr t-if="doc.distancia_nasopupilar_oi">
+                      <td>DNP OI</td>
+                      <td><span t-field="doc.distancia_nasopupilar_oi"/></td>
+                    </tr>
+                    <tr t-if="doc.distancia_interpupilar">
+                      <td>DIP</td>
+                      <td><span t-field="doc.distancia_interpupilar"/></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </t>
+
+            <!-- Observaciones -->
+            <t t-if="doc.observaciones">
+              <div class="rx-block">
+                <strong>Observaciones</strong>
+                <p class="muted" t-esc="doc.observaciones"/>
+              </div>
+            </t>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+</odoo>
